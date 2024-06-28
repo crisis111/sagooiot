@@ -2,16 +2,16 @@ package tdengine
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/gogf/gf/v2/container/gvar"
-	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gtime"
 	"sagooiot/pkg/iotModel"
 	"sagooiot/pkg/tsd/comm"
 	"sort"
 	"time"
+
+	"github.com/gogf/gf/v2/container/gvar"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 
 	"strings"
 )
@@ -198,7 +198,7 @@ func (m *TdEngine) WatchDeviceData(deviceKey string, callback func(data iotModel
 }
 
 // InsertLogData 插入日志数据
-func (m *TdEngine) InsertLogData(log iotModel.DeviceLog) (result sql.Result, err error) {
+func (m *TdEngine) InsertLogData(log iotModel.DeviceLog) (resultNum int, err error) {
 	if m.db == nil {
 		_, err = m.connect()
 		if err != nil {
@@ -209,7 +209,7 @@ func (m *TdEngine) InsertLogData(log iotModel.DeviceLog) (result sql.Result, err
 	baseSQL := "INSERT INTO %s USING device_log TAGS ('%s') VALUES ('%s', '%s', '%s')"
 	sqlStr := fmt.Sprintf(baseSQL, table, log.Device, time.Now().Format(time.RFC3339Nano), log.Type, log.Content)
 	_, err = m.db.Exec(sqlStr)
-
+	resultNum = 1
 	return
 }
 

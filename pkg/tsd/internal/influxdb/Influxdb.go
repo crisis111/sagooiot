@@ -3,14 +3,18 @@ package influxdb
 import (
 	"context"
 	"database/sql"
-	"github.com/gogf/gf/v2/database/gdb"
+	"fmt"
 	"sagooiot/pkg/iotModel"
 	"sagooiot/pkg/tsd/comm"
+	"time"
+
+	"github.com/gogf/gf/v2/database/gdb"
+	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 )
 
 type Influxdb struct {
-	Option   comm.Option
-	Database string
+	Option comm.Option
+	db     influxdb2.Client
 }
 
 type ReportReq struct {
@@ -20,30 +24,57 @@ type ReportReq struct {
 	Value      float64
 }
 
+func (m *Influxdb) connect() (_ influxdb2.Client, err error) {
+	// 创建写入选项并设置 50 个点写入一次数据
+	options := influxdb2.DefaultOptions()
+	options.SetPrecision(time.Millisecond)
+	options.SetBatchSize(50)
+
+	client := influxdb2.NewClientWithOptions(m.Option.Link, m.Option.Token, options)
+	m.db = client
+	return
+}
 func (m *Influxdb) client() {
 
-	return
 }
 
 func (m *Influxdb) Close() {
-	return
+	m.db.Close()
 }
+
 func (m *Influxdb) Query(sql string) (rows *sql.Rows, err error) {
-
-	return
+	return nil, nil
 }
-func (m *Influxdb) Count(table string) (int, error) {
 
+func (m *Influxdb) Count(deviceKey string, field string) (int, error) {
+
+	if m.db == nil {
+		_, err := m.connect()
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	fluxSql := `data = from(bucket: "%s")
+	|> range(start: 0)
+	|> filter(fn: (r) => r._measurement == "%s")
+	|> filter(fn: (r) => r._field == "%s")
+	|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
+    data |> count(column: "%s")`
+
+	table := comm.DeviceTableName(deviceKey)
+	fluxSql = fmt.Sprintf(fluxSql, m.Option.Database, table, comm.TdPropertyPrefix+field, comm.TdPropertyPrefix+field)
+
+	fmt.Println(fluxSql)
+
+	query := m.db.QueryAPI(m.Option.Org)
+	results, err := query.Query(context.Background(), fluxSql)
+	if err != nil {
+		return 0, err
+	}
+	fmt.Println(results)
+	results.Record()
 	return 50, nil
-}
-func (m *Influxdb) InsertLogData(log iotModel.DeviceLog) (result sql.Result, err error) {
-
-	return
-
-}
-func (m *Influxdb) BatchInsertLogData(ddeviceLogList map[string][]iotModel.DeviceLog) (resultNum int, err error) {
-
-	return
 }
 
 // GetAllDatabaseName 获取所有数据库名称

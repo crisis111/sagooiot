@@ -3,13 +3,14 @@ package tsd
 import (
 	"context"
 	"fmt"
-	"github.com/gogf/gf/v2/container/gvar"
-	"github.com/gogf/gf/v2/database/gdb"
-	"github.com/gogf/gf/v2/frame/g"
 	"sagooiot/internal/consts"
 	"sagooiot/pkg/iotModel"
 	"testing"
 	"time"
+
+	"github.com/gogf/gf/v2/container/gvar"
+	"github.com/gogf/gf/v2/database/gdb"
+	"github.com/gogf/gf/v2/frame/g"
 
 	_ "github.com/taosdata/driver-go/v3/taosRestful"
 	_ "github.com/taosdata/driver-go/v3/taosWS"
@@ -41,7 +42,7 @@ func TestGetDatabaseInstance(t *testing.T) {
 		t.Log(log)
 	}
 
-	num, err := DB().Count("device_log")
+	num, err := DB().Count("device_log", "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -50,7 +51,7 @@ func TestGetDatabaseInstance(t *testing.T) {
 }
 
 func TestCount(t *testing.T) {
-	num, err := DB().Count("device_log")
+	num, err := DB().Count("device_log", "")
 	if err != nil {
 		t.Fatal(err)
 	}

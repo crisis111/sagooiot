@@ -62,7 +62,7 @@ func (m *TdEngine) Query(sql string) (rows *sql.Rows, err error) {
 }
 
 // Count 统计表中数据条数
-func (m *TdEngine) Count(table string) (int, error) {
+func (m *TdEngine) Count(table string, field string) (int, error) {
 	if m.db == nil {
 		_, err := m.connect()
 		if err != nil {

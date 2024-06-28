@@ -17,6 +17,7 @@ require (
 	github.com/hashicorp/go-plugin v1.6.0
 	github.com/hibiken/asynq v0.24.1
 	github.com/hpcloud/tail v1.0.0
+	github.com/influxdata/influxdb-client-go v1.4.0
 	github.com/minio/minio-go/v7 v7.0.66
 	github.com/mojocn/base64Captcha v1.3.6
 	github.com/mssola/useragent v1.0.0
@@ -30,6 +31,12 @@ require (
 	github.com/xinjiayu/sse v1.0.1
 	github.com/xuri/excelize/v2 v2.8.0
 	go.opentelemetry.io/otel v1.18.0
+)
+
+require (
+	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
+	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839 // indirect
+	github.com/oapi-codegen/runtime v1.0.0 // indirect
 )
 
 require (
@@ -52,6 +59,7 @@ require (
 	github.com/grokify/html-strip-tags-go v0.0.1 // indirect
 	github.com/hashicorp/go-hclog v0.14.1 // indirect
 	github.com/hashicorp/yamux v0.1.1 // indirect
+	github.com/influxdata/influxdb-client-go/v2 v2.13.0
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.4 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect

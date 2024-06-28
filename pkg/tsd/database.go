@@ -12,8 +12,8 @@ import (
 type Database interface {
 	Close()
 	Query(sql string) (rows *sql.Rows, err error)
-	Count(table string) (int, error)
-	InsertLogData(log iotModel.DeviceLog) (result sql.Result, err error)
+	Count(table string, field string) (int, error)
+	InsertLogData(log iotModel.DeviceLog) (resultNum int, err error)
 	BatchInsertLogData(deviceLogList map[string][]iotModel.DeviceLog) (resultNum int, err error)
 	InsertDeviceData(deviceKey string, data iotModel.ReportPropertyData, subKey ...string) (err error)
 	BatchInsertDeviceData(deviceKey string, deviceDataList []iotModel.ReportPropertyData) (resultNum int, err error)
@@ -32,4 +32,6 @@ type Database interface {
 	GetTableDataOne(ctx context.Context, sqlStr string, args ...any) (rs gdb.Record, err error)
 	//获取超级表的多条数据
 	GetTableDataAll(ctx context.Context, sqlStr string, args ...any) (rs gdb.Result, err error)
+
+	QueryPage(fields []string, table string, stime, etime int, order string, page, limit int) (gdb.Result, error)
 }
