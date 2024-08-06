@@ -18,11 +18,11 @@ func TestSyncRequest(t *testing.T) {
 	// 启动一个 goroutine 模拟异步响应.
 	go func() {
 		time.Sleep(2 * time.Second) // 模拟处理时间.
-		asyncMapInfo.Lock()
-		if info, ok := asyncMapInfo.info[id]; ok {
+		AsyncMapInfo.Lock()
+		if info, ok := AsyncMapInfo.Info[id]; ok {
 			info.Response <- "testResponse"
 		}
-		asyncMapInfo.Unlock()
+		AsyncMapInfo.Unlock()
 	}()
 
 	got, err := SyncRequest(ctx, id, funcKey, params, timeout)
@@ -42,13 +42,13 @@ func TestGetCallInfoById(t *testing.T) {
 	funcKey := "testFunc"
 	params := "testParams"
 
-	asyncMapInfo.Lock()
-	asyncMapInfo.info[id] = &FInfo{
+	AsyncMapInfo.Lock()
+	AsyncMapInfo.Info[id] = &FInfo{
 		FuncKey:  funcKey,
 		Request:  params,
 		Response: make(chan interface{}),
 	}
-	asyncMapInfo.Unlock()
+	AsyncMapInfo.Unlock()
 
 	gotFuncKey, gotParams, _, err := GetCallInfoById(ctx, id)
 	if err != nil {
